@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+using namespace std;
+bool simulateFA(const string &input) {
+    if (input.length() < 4) {
+        cout << "Rejected: String length is less than 4.\n";
+        return false;
+    }
+    int state = 0;
+    char firstChar, secondChar;
+    for (size_t i = 0; i < input.length(); i++) {
+        char c = input[i];
+        if (c != 'a' && c != 'b') {
+            cout << "Error: Invalid character '" << c << "'. Only 'a' and 'b' are allowed.\n";
+            return false;
+        }
+        switch (state) {
+            case 0: 
+                firstChar = c;
+                state = 1;
+                break;
+            case 1: 
+                secondChar = c;
+                state = 2;
+                break;
+            case 2: 
+                state = 3;
+                break;
+            case 3: 
+                if (i >= input.length() - 2) { 
+                    if (c == firstChar && input[i + 1] == secondChar) {
+                        state = 4;
+                    } else {
+                        state = 5;
+                    }
+                }
+                break;
+            case 4: 
+                state = 4; 
+                break;
+            case 5: 
+                state = 5; 
+                break;
+            default:
+                cout << "Error: Unexpected state encountered.\n";
+                return false;
+        }
+    }
+    return state == 4;
+}
+int main() {
+    string input;
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    if (simulateFA(input)) {
+        cout << "Accepted: The string matches the pattern.\n";
+    } else {
+        cout << "Rejected: The string does not match the pattern.\n";
+    }
+    return 0;
+}
