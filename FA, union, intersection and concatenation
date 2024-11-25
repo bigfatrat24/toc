@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+using namespace std;
+bool simulateL1(const string &input) {
+    int state = 0; 
+    for (size_t i = 0; i < input.length(); i++) {
+        char c = input[i]; 
+        if (c != 'a' && c != 'b') {
+            cout << "Invalid character in L1\n";
+            return false;
+        }
+        if (c == 'a') {
+            state = (state == 0) ? 1 : 0;
+        }
+    }
+    return state == 0;
+}
+bool simulateL2(const string &input) {
+    int state = 0; 
+    for (size_t i = 0; i < input.length(); i++) {
+        char c = input[i]; 
+        if (c != 'a' && c != 'b') {
+            cout << "Invalid character in L2\n";
+            return false;
+        }
+        if (c == 'b') {
+            state = (state == 0) ? 1 : 0;
+        }
+    }
+    return state == 0;
+}
+bool simulateUnion(const string &input) {
+    return simulateL1(input) || simulateL2(input);
+}
+bool simulateIntersection(const string &input) {
+    return simulateL1(input) && simulateL2(input);
+}
+bool simulateConcatenation(const string &input) {
+    for (size_t i = 0; i < input.length(); i++) {  
+        string part1 = input.substr(0, i); 
+        string part2 = input.substr(i);
+        if (simulateL1(part1) && simulateL2(part2)) {
+            return true;
+        }
+    }
+    return false;
+}
+int main() {
+    string input;
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+    if (simulateUnion(input)) {
+        cout << "Accepted: The string belongs to the union of L1 and L2.\n";
+    } else {
+        cout << "Rejected: The string does not belong to the union of L1 and L2.\n";
+    }
+    if (simulateIntersection(input)) {
+        cout << "Accepted: The string belongs to the intersection of L1 and L2.\n";
+    } else {
+        cout << "Rejected: The string does not belong to the intersection of L1 and L2.\n";
+    }
+    if (simulateConcatenation(input)) {
+        cout << "Accepted: The string belongs to the concatenation of L1 and L2.\n";
+    } else {
+        cout << "Rejected: The string does not belong to the concatenation of L1 and L2.\n";
+    }
+    return 0;
+}
